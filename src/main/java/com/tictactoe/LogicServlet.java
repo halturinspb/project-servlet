@@ -24,9 +24,21 @@ public class LogicServlet extends HttpServlet {
             return;
         }
         field.getField().put(index, Sign.CROSS);
+        if (checkWin(resp, currentSession, field)) {
+            return;
+        }
         int emptyFieldIndex = field.getEmptyFieldIndex();
         if (emptyFieldIndex >= 0) {
             field.getField().put(emptyFieldIndex, Sign.NOUGHT);
+            if (checkWin(resp, currentSession, field)) {
+                return;
+            }
+        } else {
+            currentSession.setAttribute("draw", true);
+            List<Sign> data = field.getFieldData();
+            currentSession.setAttribute("data", data);
+            resp.sendRedirect("/index.jsp");
+            return;
         }
         List<Sign> data = field.getFieldData();
         currentSession.setAttribute("field", field);
